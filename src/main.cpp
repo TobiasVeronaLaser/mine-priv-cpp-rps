@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include <ctime>
+#include "generic.h"
 
 using namespace std;
 
@@ -63,107 +64,147 @@ string getName(Hand value){
     }
 }
 
-int main(void){
-    printf("\e[1;1H\e[2J");
-    printf("Welcome to Rock-Paper-Scissors Console-Version Prototype-Version\n");
-    bool isPlaying = true;
-    do{
-        int gameMode = -1;
+#ifdef MODULAR
+    #ifdef __linux__
+        #def CLEAR() printf("\e[1;1H\e[2J")
+    #else 
+        #def CLEAR()
+    #endif
+
+    void menu(){
         do{
             printf("\nMenu\n");
             printf("\nChoose your game mode or exit:\n0: exit\n1: single-player\n2: multiplayer\nYour pick: ");
         }while(1 != scanf("%d", &gameMode) || 0 > gameMode || gameMode > 2);
-        printf("\e[1;1H\e[2J");
-        switch(gameMode){
-            case 0: 
-                isPlaying = false;
-                printf("Till next time!\n");
-                break;
-            case 1: 
-                do{
-                    int choice = -1;
+    }
+
+    int main(void){
+        CLEAR();
+        printf("Welcome to Rock-Paper-Scissors Console-Version Modular-Version\n");
+        bool isPlaying = true;
+    }
+
+#endif
+
+#ifdef PROTOTYPE
+    int main(void){
+        #ifdef __linux__
+            printf("\e[1;1H\e[2J");
+        #endif
+        printf("Welcome to Rock-Paper-Scissors Console-Version Prototype-Version\n");
+        bool isPlaying = true;
+        do{
+            int gameMode = -1;
+            do{
+                printf("\nMenu\n");
+                printf("\nChoose your game mode or exit:\n0: exit\n1: single-player\n2: multiplayer\nYour pick: ");
+            }while(1 != scanf("%d", &gameMode) || 0 > gameMode || gameMode > 2);
+            #ifdef __linux__
+                printf("\e[1;1H\e[2J");
+            #endif
+            switch(gameMode){
+                case 0: 
+                    isPlaying = false;
+                    printf("Till next time!\n");
+                    break;
+                case 1: 
                     do{
+                        int choice = -1;
+                        do{
+                            printf("Single-player!\n");
+                            printf("\nPlayer choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
+                        }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                        if(0 == choice){
+                            break;
+                        }
+                        srand(time(0));
+                        Hand p = getHand(choice), com = getHand(3 * (rand() / (double)(RAND_MAX))+ 1);
                         printf("Single-player!\n");
-                        printf("\nPlayer choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
-                    }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
-                    printf("\e[1;1H\e[2J");
-                    if(0 == choice){
-                        break;
-                    }
-                    srand(time(0));
-                    Hand p = getHand(choice), com = getHand(3 * (rand() / (double)(RAND_MAX))+ 1);
-                    printf("Single-player!\n");
-                    printf("\nPlayer: %s\tCOM: %s\n\n", getName(p).c_str(), getName(com).c_str());
-                    switch (check(p, com)){
-                        case 2: 
-                            printf("You Win!");
-                            break;
-                        case 1:
-                            printf("A draw.");
-                            break;
-                        case 0: 
-                            printf("You lose!");
-                            break;
-                        default:
-                            printf("Something unexpected happened!\n");
-                            return EXIT_FAILURE;
-                    }
-                    printf("\n\nPlease enter to proceed.");
-                    char *dump;
-                    while(1 != scanf("%s", &dump));
-                    printf("\e[1;1H\e[2J");
-                }while(true);
-                break;
-            case 2:
-                do{
-                    int choice = -1;
+                        printf("\nPlayer: %s\tCOM: %s\n\n", getName(p).c_str(), getName(com).c_str());
+                        switch (check(p, com)){
+                            case 2: 
+                                printf("You Win!");
+                                break;
+                            case 1:
+                                printf("A draw.");
+                                break;
+                            case 0: 
+                                printf("You lose!");
+                                break;
+                            default:
+                                printf("Something unexpected happened!\n");
+                                return EXIT_FAILURE;
+                        }
+                        printf("\n\nPlease enter something to proceed.");
+                        char *dump;
+                        while(1 != scanf("%s", &dump));
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                    }while(true);
+                    break;
+                case 2:
                     do{
+                        int choice = -1;
+                        do{
+                            printf("Multiplayer!\n");
+                            printf("\nPlayer 1 choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
+                        }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                        if(0 == choice){
+                            break;
+                        }
+                        Hand p1 = getHand(choice);
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                        choice = -1;
+                        do{
+                            printf("Multiplayer!\n");
+                            printf("\nPlayer 2 choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
+                        }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                        if(0 == choice){
+                            break;
+                        }
+                        Hand p2 = getHand(choice);
                         printf("Multiplayer!\n");
-                        printf("\nPlayer 1 choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
-                    }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
-                    printf("\e[1;1H\e[2J");
-                    if(0 == choice){
-                        break;
-                    }
-                    Hand p1 = getHand(choice);
-                    printf("\e[1;1H\e[2J");
-                    choice = -1;
-                    do{
-                        printf("Multiplayer!\n");
-                        printf("\nPlayer 2 choose your hand or exit:\n0: exit\n1: Rock\n2: Paper\n3: Scissors\nYour pick: ");
-                    }while(1 != scanf("%d", &choice) || 0 > choice || choice > 3);
-                    printf("\e[1;1H\e[2J");
-                    if(0 == choice){
-                        break;
-                    }
-                    Hand p2 = getHand(choice);
-                    printf("Multiplayer!\n");
-                    printf("\nPlayer 1: %s\tPlayer 2: %s\n\n", getName(p1).c_str(), getName(p2).c_str());
-                    switch (check(p1, p2)){
-                        case 2: 
-                            printf("Player 1 wins!");
-                            break;
-                        case 1:
-                            printf("A draw.");
-                            break;
-                        case 0: 
-                            printf("Player 2 wins!");
-                            break;
-                        default:
-                            printf("Something unexpected happened!\n");
-                            return EXIT_FAILURE;
-                    }
-                    printf("\n\nPlease enter to proceed.");
-                    char *dump;
-                    while(1 != scanf("%s", &dump));
-                    printf("\e[1;1H\e[2J");
-                }while(true);
-                break;
-            default: 
-                isPlaying = false;
-                printf("Something unexpected happened!\n");
-                return EXIT_FAILURE;
-        }
-    }while(isPlaying);
-    return EXIT_SUCCESS;
-}
+                        printf("\nPlayer 1: %s\tPlayer 2: %s\n\n", getName(p1).c_str(), getName(p2).c_str());
+                        switch (check(p1, p2)){
+                            case 2: 
+                                printf("Player 1 wins!");
+                                break;
+                            case 1:
+                                printf("A draw.");
+                                break;
+                            case 0: 
+                                printf("Player 2 wins!");
+                                break;
+                            default:
+                                printf("Something unexpected happened!\n");
+                                return EXIT_FAILURE;
+                        }
+                        printf("\n\nPlease enter something to proceed.");
+                        char *dump;
+                        while(1 != scanf("%s", &dump));
+                        #ifdef __linux__
+                            printf("\e[1;1H\e[2J");
+                        #endif
+                    }while(true);
+                    break;
+                default: 
+                    isPlaying = false;
+                    printf("Something unexpected happened!\n");
+                    return EXIT_FAILURE;
+            }
+        }while(isPlaying);
+        return EXIT_SUCCESS;
+    }
+#endif
