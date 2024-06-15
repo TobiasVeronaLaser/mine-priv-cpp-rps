@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -87,7 +88,12 @@ int main(void){
                         if(0 == choice){
                             break;
                         }
-                        Hand p = getHand(choice), com = getHand(3 * 0.9999 * rand() / (RAND_MAX) + 1);
+                        srand(time(0));
+                        double value = rand() / (double)(RAND_MAX + 1);
+                        printf("\n%lf\n", value);
+                        double endvalue = 3 * value;
+                        printf("\n%lf\n", endvalue);
+                        Hand p = getHand(choice), com = getHand(endvalue);
                         printf("Player:\t%s\tCOM:\t%s\n", getName(p), getName(com));
                         switch (check(p, com)){
                             case 2: 
